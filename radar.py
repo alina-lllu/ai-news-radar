@@ -232,7 +232,7 @@ def generate_daily_report(items, date_str, llm_summary=None):
 
 
 def publish_to_issue(content, date_str, repo_name=None):
-    token = (os.environ.get("GITHUB_TOKEN") or os.environ.get("G_T") or "").strip()
+    token = (os.environ.get("G_T") or os.environ.get("GITHUB_TOKEN") or "").strip()
     repo = (repo_name or os.environ.get("RADAR_REPO") or "").strip()
 
     if not token or not repo:
