@@ -1,0 +1,45 @@
+name: Daily AI News Radar
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # 每天 UTC 22:00（北京时间早上 6:00）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: "requirements.txt"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run AI News Radar
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_API_BASE_URL: ${{ secrets.LLM_API_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          GITHUB_TOKEN: ${{ secrets.G_T }}
+          RADAR_REPO: ${{ github.repository }}
+        run: |
+          python radar.py --summarize --publish --hours 28
+
+      - name: Commit radar output
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add output/
+          git commit -m "radar: $(date +%Y-%m-%d) daily digest" || echo "nothing to commit"
+          git push || echo "nothing to push"
