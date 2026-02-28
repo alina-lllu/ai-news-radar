@@ -150,9 +150,9 @@ def fetch_all(feeds):
 
 
 def summarize_with_llm(items):
-    api_key = os.environ.get("LLM_API_KEY")
-    api_base = os.environ.get("LLM_API_BASE_URL", "https://api.openai.com/v1")
-    model = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+    api_key = (os.environ.get("LLM_API_KEY") or "").strip()
+    api_base = (os.environ.get("LLM_API_BASE_URL") or "https://api.openai.com/v1").strip()
+    model = (os.environ.get("LLM_MODEL") or "gpt-4o-mini").strip()
 
     if not api_key:
         print("  [WARN] LLM_API_KEY not set, skipping summarization")
@@ -232,8 +232,8 @@ def generate_daily_report(items, date_str, llm_summary=None):
 
 
 def publish_to_issue(content, date_str, repo_name=None):
-    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("G_T")
-    repo = repo_name or os.environ.get("RADAR_REPO")
+    token = (os.environ.get("GITHUB_TOKEN") or os.environ.get("G_T") or "").strip()
+    repo = (repo_name or os.environ.get("RADAR_REPO") or "").strip()
 
     if not token or not repo:
         print("  [WARN] GITHUB_TOKEN/G_T and RADAR_REPO not set, skipping publish")
