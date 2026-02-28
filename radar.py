@@ -247,11 +247,12 @@ def publish_to_issue(content, date_str, repo_name=None):
     data = {
         "title": f"AI 新闻雷达 - {date_str}",
         "body": content,
-        "labels": ["radar"],
     }
 
     try:
         resp = requests.post(url, headers=headers, json=data)
+        if resp.status_code >= 400:
+            print(f"  [ERROR] GitHub API {resp.status_code}: {resp.text[:500]}")
         resp.raise_for_status()
         issue_url = resp.json().get("html_url")
         print(f"  Published: {issue_url}")
