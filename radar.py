@@ -266,11 +266,12 @@ def main():
     parser.add_argument("--summarize", action="store_true", help="Use LLM to summarize")
     parser.add_argument("--publish", action="store_true", help="Publish as GitHub Issue")
     parser.add_argument("--repo", help="Target repo for publishing (owner/repo)")
-    parser.add_argument("--hours", type=int, default=MAX_AGE_HOURS, help="Max age in hours")
+    parser.add_argument("--hours", type=int, default=None, help="Max age in hours")
     args = parser.parse_args()
 
-    global MAX_AGE_HOURS
-    MAX_AGE_HOURS = args.hours
+    if args.hours is not None:
+        global MAX_AGE_HOURS
+        MAX_AGE_HOURS = args.hours
 
     date_str = datetime.now().strftime("%Y-%m-%d")
     print(f"\n🔍 AI News Radar - {date_str}")
