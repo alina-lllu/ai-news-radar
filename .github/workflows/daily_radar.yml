@@ -2,8 +2,15 @@ name: Daily AI News Radar
 
 on:
   schedule:
-    - cron: '0 22 * * *'  # 每天 UTC 22:00（北京时间早上 6:00）
+    - cron: '0 22 * * *'
   workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - radar.py
+      - sources/**
+      - .github/workflows/daily_radar.yml
 
 permissions:
   contents: write
